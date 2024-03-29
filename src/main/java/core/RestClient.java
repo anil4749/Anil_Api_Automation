@@ -9,14 +9,13 @@ import io.restassured.config.EncoderConfig;
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
-import java.io.File;
+import org.slf4j.event.Level;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.event.Level;
 
 public class RestClient {
     private String url;
@@ -87,9 +86,9 @@ public class RestClient {
         }
 
         Response response = (res.then()).extract().response();
-        curlReporting(String.valueOf(response.getStatusCode()),response);
         System.out.println("Curl --> " + this.curls.get(0));
-        System.out.println("Response --> " +response.body().asString());
+        curlReporting(String.valueOf(response.getStatusCode()), response);
+        //System.out.println("Response --> " +response.body().asString());
         return response;
     }
 
@@ -125,6 +124,7 @@ public class RestClient {
 
     private void curlReporting(String statusCode, Response response) {
         Allure.addAttachment("curl logger",curls.get(0));
+        Allure.addAttachment("status code ", statusCode);
         Allure.addAttachment("response body", response.body().print());
         Allure.addAttachment("response headers", response.headers().toString());
     }

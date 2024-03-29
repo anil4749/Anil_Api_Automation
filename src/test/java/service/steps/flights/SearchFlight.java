@@ -1,28 +1,31 @@
-package service.steps;
+package service.steps.flights;
 
 import base.TestBase;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import core.RestClient;
-import dot.GenerateTokenDto;
+import dot.searchFlight.SearchFlightDto;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
-import java.util.*;
 
-public class GenerateToken extends TestBase {
+import java.util.HashMap;
+import java.util.Map;
+
+public class SearchFlight extends TestBase {
     ObjectMapper objectMapper=new ObjectMapper();
     private Map<String, String> headers=new HashMap<>();
     private Map<String, String> queryParams=new HashMap<>();
     private String payload=null;
     String url;
 
- @Step("get token")
-    public Response generateToken(GenerateTokenDto requestBodyDto){
+    @Step("Search Flights")
+    public Response searchFlight(SearchFlightDto requestBodyDto) {
      Response response=null;
       try {
-          url=host+generateToken;
+          url = host + searchFlight;
           Map<String, String> headers=new HashMap<>();
           headers.put("Content-Type", "application/json");
-          headers.put("Authorization", accessToken);
+          headers.put("authorization", accessToken);
+          headers.put("appID", "Desktop");
           String payload=objectMapper.writeValueAsString(requestBodyDto);
           RestClient restClient=new RestClient(url,payload,headers,queryParams,null,null,null);
           response=restClient.postResponse();
@@ -31,10 +34,5 @@ public class GenerateToken extends TestBase {
         }
         return response;
     }
-
-    @Step("step 1")
-        public void step1(){
-
-        }
 
 }

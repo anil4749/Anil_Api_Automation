@@ -6,17 +6,13 @@
 
 
     <groupId>org.example</groupId>
-    <artifactId>anil_automation_test_basic</artifactId>
+    <artifactId>api_automation_flydubai</artifactId>
     <version>1.0-SNAPSHOT</version>
 
 
     <dependencies>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.3</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.github.dzieciou.testing/curl-logger -->
+
+    <!-- https://mvnrepository.com/artifact/com.github.dzieciou.testing/curl-logger -->
         <dependency>
             <groupId>com.github.dzieciou.testing</groupId>
             <artifactId>curl-logger</artifactId>
