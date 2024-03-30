@@ -11,8 +11,8 @@ import java.util.Map;
 public class CommanValidation {
 
     @Step("Verify Status Code ")
-    public static void verityStatusCode(int actualStatusCode, int expectedStatusCode, SoftAssert softAssert){
-        softAssert.assertEquals(actualStatusCode,expectedStatusCode,"Verify status Code");
+    public static void verityStatusCode(int actualStatusCode, int expectedStatusCode, SoftAssert softAssert, String massage){
+        softAssert.assertEquals(actualStatusCode,expectedStatusCode,massage);
     }
     public static void validateResponse(Response response,Map<String,String> expected,SoftAssert softAssert){
         JsonPath path= response.jsonPath();

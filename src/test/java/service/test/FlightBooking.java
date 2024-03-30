@@ -6,13 +6,11 @@ import dot.payment.PaymentDto;
 import dot.searchFlight.SearchFlightDto;
 import dot.selectFlight.Preferences;
 import dot.selectFlight.SelectFlightDto;
-import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -23,7 +21,6 @@ import service.steps.payment.GetPciSession;
 import service.steps.payment.PayLater;
 import service.steps.payment.Payment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static ValidateResponse.CommanValidation.getValueAsString;
@@ -65,7 +62,7 @@ private CommanValidation commanValidation;
         //Search flight
         SearchFlightDto searchFlightDto = SearchFlightDto.searchFlight(source, destination, date, numberOdAdult, numberOfChild);
         Response getAllFlights = searchFlight.searchFlight(searchFlightDto);
-        verityStatusCode(getAllFlights.getStatusCode(),HttpStatus.SC_OK,softAssert);
+        verityStatusCode(getAllFlights.getStatusCode(),HttpStatus.SC_OK,softAssert, "Verify status code of search flight");
         JsonPath availableFlights = getAllFlights.jsonPath();
 
         //get sessionToken
@@ -81,7 +78,7 @@ private CommanValidation commanValidation;
                 Preferences.builder().build()
         ).selectedFlights(selectedFlights).build();
         Response response = select_Flight.selectFlight(selectFlightDto, securityToken);
-        verityStatusCode(response.statusCode(),HttpStatus.SC_OK,softAssert);
+        verityStatusCode(response.statusCode(),HttpStatus.SC_OK,softAssert, "Verify status code of add flight");
 
         //payment
         PaymentDto paymentDto = PaymentDto.builder().
@@ -90,14 +87,14 @@ private CommanValidation commanValidation;
                 searchRequest(searchFlightDto).selectedFlights(selectedFlights).
                 confirmUrl(new TestBase().host+new TestBase().confirmFlight).build();
         Response paymnet = payment.requestPayment(paymentDto,securityToken);
-        verityStatusCode(paymnet.statusCode(),HttpStatus.SC_OK,softAssert);
+        verityStatusCode(paymnet.statusCode(),HttpStatus.SC_OK,softAssert, "Verify status code payment");
         List<String> transaction = payment.paymentInfo(paymnet);
         String sessionId = transaction.get(0);
         String transactionKey = transaction.get(1);
 
         //getPccSession
         Response getSessionDetails = getPciSession.getPciSession(sessionId,transactionKey,paymentDto,securityToken);
-        verityStatusCode(getSessionDetails.statusCode(),HttpStatus.SC_OK,softAssert);
+        verityStatusCode(getSessionDetails.statusCode(),HttpStatus.SC_OK,softAssert, "Verify status code of getPicSession");
         String paymentId =getValueAsString(getSessionDetails,"paymentId");
         String currency =getValueAsString(getSessionDetails,"currency");
         String amount =getValueAsString(getSessionDetails,"amount");
@@ -105,11 +102,11 @@ private CommanValidation commanValidation;
         //payLater
         PayLaterDto payLaterDto = PayLaterDto.builder().amount(amount).currency(currency).paymentId(paymentId).sessionId(sessionId).build();
         Response payLaterResp = payLater.payLater(sessionId,transactionKey,payLaterDto,securityToken);
-        verityStatusCode(payLaterResp.statusCode(),HttpStatus.SC_OK,softAssert);
+        verityStatusCode(payLaterResp.statusCode(),HttpStatus.SC_OK,softAssert, "Verify status code of pay later");
 
         //confirm
         Response confirm = confirmBooking.confirmBooking(securityToken);
-        verityStatusCode(confirm.statusCode(),HttpStatus.SC_OK,softAssert);
+        verityStatusCode(confirm.statusCode(),HttpStatus.SC_OK,softAssert, "Verify status code of confirm");
 
         System.out.println("PNR ====> "  +getValueAsString(confirm,"pnrInformation.bookingReference"));
 
