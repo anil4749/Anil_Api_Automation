@@ -97,9 +97,9 @@ private CommanValidation commanValidation;
         //getPccSession
         Response getSessionDetails = getPciSession.getPciSession(sessionId,transactionKey,paymentDto,securityToken);
         Assert.assertEquals(getSessionDetails.getStatusCode(), HttpStatus.SC_OK);
-        String paymentId =getValueAsString(getSessionDetails,"");
-        String currency =getValueAsString(getSessionDetails,"");
-        String amount =getValueAsString(getSessionDetails,"");
+        String paymentId =getValueAsString(getSessionDetails,"paymentId");
+        String currency =getValueAsString(getSessionDetails,"currency");
+        String amount =getValueAsString(getSessionDetails,"amount");
 
         //payLater
         PayLaterDto payLaterDto = PayLaterDto.builder().amount(amount).currency(currency).paymentId(paymentId).sessionId(sessionId).build();
@@ -110,7 +110,7 @@ private CommanValidation commanValidation;
         Response confirm = confirmBooking.confirmBooking(securityToken);
         Assert.assertEquals(confirm.getStatusCode(), HttpStatus.SC_OK);
 
-        System.out.println("PNR ====> "  +getValueAsString(confirm,""));
+        System.out.println("PNR ====> "  +getValueAsString(confirm,"pnrInformation.bookingReference"));
 
 
 

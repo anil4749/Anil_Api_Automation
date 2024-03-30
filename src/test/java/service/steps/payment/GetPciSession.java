@@ -32,7 +32,7 @@ public class GetPciSession extends TestBase {
             queryParams.put("systemId", "FZPSS");
             String payload = objectMapper.writeValueAsString(requestBodyDto);
             RestClient restClient = new RestClient(url, payload, headers, queryParams, null, null, null);
-            response = restClient.postResponse();
+            response = restClient.getResponse();
         } catch (Exception e) {
             e.printStackTrace();
         }

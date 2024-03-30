@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 @Data
 public class PassengerDetails {
-    boolean isPrimaryPassenger = true;
+    String isPrimaryPassenger;
     @Builder.Default
     private String passengerId = "-1";
     @Builder.Default
@@ -71,7 +71,7 @@ public class PassengerDetails {
         List<PassengerDetails> passengerList = new ArrayList<>();
         for (int i = 0; i < numberOfPassangers; i++) {
             if (i==0){
-                passengerList.add(PassengerDetails.builder().passengerId("-" + (numberOfPassangers - i)).isPrimaryPassenger(true).build());
+                passengerList.add(PassengerDetails.builder().passengerId("-" + (numberOfPassangers - i)).isPrimaryPassenger("true").build());
             }else passengerList.add(PassengerDetails.builder().passengerId("-" + (numberOfPassangers - i)).build());
         }
         return passengerList;
