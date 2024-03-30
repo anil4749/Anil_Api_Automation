@@ -16,9 +16,9 @@ import java.util.Map;
 
 public class Payment extends TestBase {
     ObjectMapper objectMapper = new ObjectMapper();
-    private Map<String, String> headers = new HashMap<>();
-    private Map<String, String> queryParams = new HashMap<>();
-    private String payload = null;
+    private final Map<String, String> headers = new HashMap<>();
+    private final Map<String, String> queryParams = new HashMap<>();
+    private final String payload = null;
 
     @Step("Request for payment")
     public Response requestPayment(PaymentDto requestBodyDto, String securityToken) {
@@ -43,7 +43,7 @@ public class Payment extends TestBase {
     public List<String> paymentInfo(Response response){
         List<String> paymentinfo = new ArrayList<>();
         JsonPath payment = response.jsonPath();
-        String url[] = payment.getString("pciURLtoRedirect").split("&");
+        String[] url = payment.getString("pciURLtoRedirect").split("&");
         paymentinfo.add(url[0].split("=")[1]);
         paymentinfo.add(url[1].split("=")[1]);
         return paymentinfo;

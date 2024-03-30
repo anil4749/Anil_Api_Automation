@@ -11,9 +11,9 @@ import java.util.Map;
 
 public class ConfirmBooking extends TestBase {
     ObjectMapper objectMapper = new ObjectMapper();
-    private Map<String, String> headers = new HashMap<>();
-    private Map<String, String> queryParams = new HashMap<>();
-    private String payload = null;
+    private final Map<String, String> headers = new HashMap<>();
+    private final Map<String, String> queryParams = new HashMap<>();
+    private final String payload = null;
 
     @Step("Confirm Booking")
     public Response confirmBooking(String securityToken) {

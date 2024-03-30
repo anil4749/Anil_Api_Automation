@@ -12,9 +12,9 @@ import java.util.Map;
 
 public class PayLater extends TestBase {
     ObjectMapper objectMapper = new ObjectMapper();
-    private Map<String, String> headers = new HashMap<>();
-    private Map<String, String> queryParams = new HashMap<>();
-    private String payload = null;
+    private final Map<String, String> headers = new HashMap<>();
+    private final Map<String, String> queryParams = new HashMap<>();
+    private final String payload = null;
 
     @Step("Pay Later")
     public Response payLater(String sessionId, String transactionKey, PayLaterDto requestBodyDto, String securityToken) {

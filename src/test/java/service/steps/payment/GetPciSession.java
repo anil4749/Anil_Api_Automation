@@ -13,9 +13,9 @@ import java.util.Map;
 
 public class GetPciSession extends TestBase {
     ObjectMapper objectMapper = new ObjectMapper();
-    private Map<String, String> headers = new HashMap<>();
-    private Map<String, String> queryParams = new HashMap<>();
-    private String payload = null;
+    private final Map<String, String> headers = new HashMap<>();
+    private final Map<String, String> queryParams = new HashMap<>();
+    private final String payload = null;
 
     @Step("Get Pci Session")
     public Response getPciSession(String sessionId, String transactionKey, PaymentDto requestBodyDto, String securityToken) {
