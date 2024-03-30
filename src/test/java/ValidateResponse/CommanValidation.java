@@ -1,7 +1,7 @@
 package ValidateResponse;
 
 
-import groovy.util.logging.Log;
+import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.testng.asserts.SoftAssert;
@@ -9,6 +9,11 @@ import org.testng.asserts.SoftAssert;
 import java.util.Map;
 
 public class CommanValidation {
+
+    @Step("Verify Status Code ")
+    public static void verityStatusCode(int actualStatusCode, int expectedStatusCode, SoftAssert softAssert){
+        softAssert.assertEquals(actualStatusCode,expectedStatusCode,"Verify status Code");
+    }
     public static void validateResponse(Response response,Map<String,String> expected,SoftAssert softAssert){
         JsonPath path= response.jsonPath();
         for (Map.Entry<String, String> pair : expected.entrySet()) {

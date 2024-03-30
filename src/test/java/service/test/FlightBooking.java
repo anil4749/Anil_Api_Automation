@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static ValidateResponse.CommanValidation.getValueAsString;
+import static ValidateResponse.CommanValidation.verityStatusCode;
 import static dot.payment.PassengerDetails.createPassangerDetails;
 
 
@@ -64,7 +65,7 @@ private CommanValidation commanValidation;
         //Search flight
         SearchFlightDto searchFlightDto = SearchFlightDto.searchFlight(source, destination, date, numberOdAdult, numberOfChild);
         Response getAllFlights = searchFlight.searchFlight(searchFlightDto);
-        Assert.assertEquals(getAllFlights.getStatusCode(), HttpStatus.SC_OK);
+        verityStatusCode(getAllFlights.getStatusCode(),HttpStatus.SC_OK,softAssert);
         JsonPath availableFlights = getAllFlights.jsonPath();
 
         //get sessionToken
@@ -80,23 +81,23 @@ private CommanValidation commanValidation;
                 Preferences.builder().build()
         ).selectedFlights(selectedFlights).build();
         Response response = select_Flight.selectFlight(selectFlightDto, securityToken);
-        Assert.assertEquals(response.getStatusCode(), HttpStatus.SC_OK);
+        verityStatusCode(response.statusCode(),HttpStatus.SC_OK,softAssert);
 
         //payment
         PaymentDto paymentDto = PaymentDto.builder().
                 passengerList(createPassangerDetails(numberOdAdult+numberOfChild)).
-                preferences(Preferences.builder().isReadyToSignUpForOffers("false").build()).
+                preferences(Preferences.builder().build()).
                 searchRequest(searchFlightDto).selectedFlights(selectedFlights).
                 confirmUrl(new TestBase().host+new TestBase().confirmFlight).build();
         Response paymnet = payment.requestPayment(paymentDto,securityToken);
-        Assert.assertEquals(response.getStatusCode(), HttpStatus.SC_OK);
+        verityStatusCode(paymnet.statusCode(),HttpStatus.SC_OK,softAssert);
         List<String> transaction = payment.paymentInfo(paymnet);
         String sessionId = transaction.get(0);
         String transactionKey = transaction.get(1);
 
         //getPccSession
         Response getSessionDetails = getPciSession.getPciSession(sessionId,transactionKey,paymentDto,securityToken);
-        Assert.assertEquals(getSessionDetails.getStatusCode(), HttpStatus.SC_OK);
+        verityStatusCode(getSessionDetails.statusCode(),HttpStatus.SC_OK,softAssert);
         String paymentId =getValueAsString(getSessionDetails,"paymentId");
         String currency =getValueAsString(getSessionDetails,"currency");
         String amount =getValueAsString(getSessionDetails,"amount");
@@ -104,19 +105,14 @@ private CommanValidation commanValidation;
         //payLater
         PayLaterDto payLaterDto = PayLaterDto.builder().amount(amount).currency(currency).paymentId(paymentId).sessionId(sessionId).build();
         Response payLaterResp = payLater.payLater(sessionId,transactionKey,payLaterDto,securityToken);
-        Assert.assertEquals(payLaterResp.getStatusCode(), HttpStatus.SC_OK);
+        verityStatusCode(payLaterResp.statusCode(),HttpStatus.SC_OK,softAssert);
 
         //confirm
         Response confirm = confirmBooking.confirmBooking(securityToken);
-        Assert.assertEquals(confirm.getStatusCode(), HttpStatus.SC_OK);
+        verityStatusCode(confirm.statusCode(),HttpStatus.SC_OK,softAssert);
 
         System.out.println("PNR ====> "  +getValueAsString(confirm,"pnrInformation.bookingReference"));
 
-
-
-
-
-
-
+        softAssert.assertAll();
     }
 }
